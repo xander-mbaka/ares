@@ -1,0 +1,32 @@
+doctype html
+html(lang='en')
+	head
+		title Ares Adaptive Security
+		meta(name='author', content='QET Systems Ltd.')
+		link(rel='stylesheet', href='css/root.css', type='text/css')
+		script(type='text/javascript').
+			var timer;
+			function startTimer () {
+				resetTimer();
+			}
+
+			function autoLogout () {
+				clearInterval(timer);
+				window.momentum.execute("logout:show");
+			}
+
+			function resetTimer () {
+				//console.log('reset');
+				clearInterval(timer);           
+				timer = setInterval(function(){
+					autoLogout();
+				}, 3000000);
+			}
+			startTimer();
+		
+	body#body(onmousemove='resetTimer()', onclick='resetTimer()', onkeypress='resetTimer()', onscroll='resetTimer()')
+		div.loading
+			img(src='img/loading.gif', alt='loading-img')
+		div#menu
+		div#content.content.main
+		script(data-main='js/require_main.js?bust=v1', type='text/javascript',src='js/vendor/require.js?bust=v1')

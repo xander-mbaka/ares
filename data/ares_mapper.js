@@ -62,9 +62,9 @@ var SensorMapper = new Class(AbstractMapper, {
       this.dataMap = new DataMap(this.domainClass, 'sensors');
       this.dataMap.addColumnMap('name', 'name', 'varchar', 255);
       this.dataMap.addColumnMap('serial', 'deviceId', 'varchar', 255);
-      this.dataMap.addColumnMap('type', 'typeId', 'int', 11);
+      this.dataMap.addColumnMap('type_id', 'typeId', 'int', 11);
       this.dataMap.addColumnMap('location_id', 'locationId', 'int', 11);
-       this.dataMap.addColumnMap('pin_id', 'pinId', 'varchar', 5);
+      this.dataMap.addColumnMap('pin_id', 'pinId', 'varchar', 5);
       this.dataMap.addColumnMap('status', 'status', 'tinyint', 2);
       this.mapLoaded = true;
    },

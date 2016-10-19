@@ -117,15 +117,10 @@ var five = require("johnny-five");
 var board = new five.Board({ port: "COM24" });
 
 board.on("ready", function() {
-  var mic = new five.Sensor("A0");
-  var motion = new five.Motion(7);
-  var proximity = new five.Proximity({controller: "HCSR04", pin: 6});
-  var vibration = new five.Sensor("A1");
-  var weight = new five.Sensor({ pin: "A4", freq: 1000, threshold: 5 });
 
   Sensor.findAll(function (sensors) {
     sensors.forEach(function (sensor) {
-      sensor.loadSensor();
+      sensor.loadSensor(five);
     })
   })
 });

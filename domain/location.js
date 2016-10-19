@@ -2,6 +2,7 @@ require('jsclass');
 var Class = require('jsclass/src/core').Class;
 var DomainObject = require("../data/core/datamapper").DomainObject;
 var MapperRegistry = require("../data/core/mapperregistry").MapperRegistry;
+var LocationEventDetector = require("../domain/security").LocationEventDetector;
 
 var Location = new Class(DomainObject, {
 
@@ -54,6 +55,16 @@ var Location = new Class(DomainObject, {
       this.status = status;
       this.sensors = [];
       this.counterMeasures = [];
+      this.detectorLoaded = false;
+   },
+
+   loadObjects: function (cb) {
+      if (this.id != null && this.detectorLoaded == false) {
+         this.eventDetector = new LocationEventDetector(this);
+         this.detectorLoaded = true;
+      }
+      cb();
+      
    },
 
    setCoordinates: function(latitude, longitude) {

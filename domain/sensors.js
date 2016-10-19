@@ -79,10 +79,8 @@ var Sensor = new Class(DomainObject, {
 
    initialize: function (id, typeId, device_id, locationId, pinId, status) {
       this.id = id;
-      //this.type  = type;
       this.typeId = typeId;
       this.deviceId = device_id;
-      // this.location = location;
       this.locationId = locationId;
       this.referenceAverage = 0;
       this.referenceHistory = [];
@@ -93,29 +91,71 @@ var Sensor = new Class(DomainObject, {
       this.referenceTotal = 0;
       this.pinId = pinId;
       this.status = status;
-      //location.registerSensor(this);
+      this.processingMethod = '';
    },
 
-   loadObjects: function (led) {
+   loadObjects: function (cb) {
       var self = this;
-      if (locationId != null) {
-         Location.findObject(locationId, function (loc) {
-           //loc.eventManager.registerSensor(self);
+      if (this.locationId != null) {
+         Location.findObject(this.locationId, function (loc) {
+           loc.eventDetector.registerSensor(self);
+           //self.location = loc;
+           //loc.registerSensor(this);
+           if (self.typeId != null) {
+               SensorType.findObject(self.typeId, function (typ) {
+                 self.type = typ;
+                 cb();
+               });
+            }
          });
       }
       
-      if (typeId != null) {
-         SensorType.findObject(typeId, function (typ) {
-           self.type = typ;
-         });
-      }
+      
    },
 
    loadSensor: function () {
-      var motion = new five.Motion(7);
-  var proximity = new five.Proximity({controller: "HCSR04", pin: 6});
-  var vibration = new five.Sensor("A1");
-  var weight = new five.Sensor({ pin: "A4", freq: 1000, threshold: 5 });
+      var self = this;
+      
+      if (this.typeId != null) {
+         if (this.type.name == 'Audio Sensor') {
+            this.sensor = new five.Sensor(this.pinId);
+            this.processingMethod = 'processAudio';
+         }else if (this.type.name == 'Motion Sensor') {
+            this.sensor = new five.Motion(this.pinId);
+            this.processingMethod = 'processMotion';
+         }else if (this.type.name == 'Vibration Sensor') {
+            this.sensor = new five.Sensor(this.pinId);
+            this.processingMethod = 'processVibration';
+         }else if (this.type.name == 'Proximity Sensor') {
+            this.sensor = new five.Proximity({controller: "HCSR04",freq: 25,  pin: this.pinId});
+            this.processingMethod = 'processProximity';
+         }else if (this.type.name == 'Weight Sensor') {
+            this.sensor = new five.Sensor({ pin: this.pinId, freq: 25, threshold: 5 });
+            this.processingMethod = 'processProximity';
+         }else if (this.type.name == 'RFID Sensor') {
+            //this.sensor = new five.Sensor(this.pinId);
+         }else if (this.type.name == 'Situation Assessor') {
+            //this.sensor = new five.Sensor(this.pinId);
+         }else if (this.type.name == 'Scout Drone') {
+            //this.sensor = new five.Sensor(this.pinId);
+         }else if (this.type.name == 'Location Sensor') {
+            //this.sensor = new five.Sensor(this.pinId);
+         }else if (this.type.name == 'Velocity Sensor') {
+            this.sensor = new five.Proximity({controller: "HCSR04", pin: this.pinId});
+            this.processingMethod = 'processVelocity';
+         }
+
+         if (this.pinId != '') {
+            this.sensor.on("data", function() {
+               //console.log("mic: " + this.value);
+               self.processEvent(this);
+               //self.type.processEvent(this, self);
+               
+            });
+         }
+         
+
+      }
    },
 
    setLed: function (led) {
@@ -124,11 +164,9 @@ var Sensor = new Class(DomainObject, {
       this.markDirty();
    },
 
-   setSensor: function (sensor, pin) {
+   setSensor: function (sensor) {
       var self = this;
       this.sensor = sensor;
-      this.pinId = pin;
-
       this.sensor.on("data", function() {
          //console.log("mic: " + this.value);
          self.processEvent(this);
@@ -140,7 +178,8 @@ var Sensor = new Class(DomainObject, {
    },
 
    processEvent: function (event) {
-      var self = this;
+      this[this.processingMethod].call(this, event);
+      /*var self = this;
       this.immediateHistory.push(event.value);
       this.immediateTotal += event.value;
 
@@ -152,7 +191,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
          this.notifyObservers(this, event);
-      }
+      }*/
    },
 
    archiveAverage: function (date, value) {
@@ -170,7 +209,104 @@ var Sensor = new Class(DomainObject, {
          //this.referenceHistory = [];
       }
 
+   },
 
+   processAudio: function (event) {
+      var self = this;
+      this.immediateHistory.push(event.value);
+      this.immediateTotal += event.value;
+
+      if (this.immediateHistory.length == 200) {
+         this.immediateAverage = this.immediateTotal/200;
+         console.log(self.type.name +": " + this.immediateAverage);
+         //self.led.brightness(this.immediateAverage >> 2);
+         this.immediateHistory = [];
+         this.immediateTotal = 0;
+         this.archiveAverage(new Date(Date.now()), this.immediateAverage);
+         this.notifyObservers(this, event);
+      }
+   },
+
+   processMotion: function (event) {
+      var self = this;
+      this.immediateHistory.push(event.value);
+      this.immediateTotal += event.value;
+
+      if (this.immediateHistory.length == 200) {
+         this.immediateAverage = this.immediateTotal/200;
+         console.log(self.type.name +": " + this.immediateAverage);
+         //self.led.brightness(this.immediateAverage >> 2);
+         this.immediateHistory = [];
+         this.immediateTotal = 0;
+         this.archiveAverage(new Date(Date.now()), this.immediateAverage);
+         this.notifyObservers(this, event);
+      }
+   },
+
+   processVibration: function (event) {
+      var self = this;
+      this.immediateHistory.push(event.value);
+      this.immediateTotal += event.value;
+
+      if (this.immediateHistory.length == 200) {
+         this.immediateAverage = this.immediateTotal/200;
+         console.log(self.type.name +": " + this.immediateAverage);
+         //self.led.brightness(this.immediateAverage >> 2);
+         this.immediateHistory = [];
+         this.immediateTotal = 0;
+         this.archiveAverage(new Date(Date.now()), this.immediateAverage);
+         this.notifyObservers(this, event);
+      }
+   },
+
+   processProximity: function (event) {
+      event.value = event.cm;
+      var self = this;
+      this.immediateHistory.push(event.value);
+      this.immediateTotal += event.value;
+
+      if (this.immediateHistory.length == 200) {
+         this.immediateAverage = this.immediateTotal/200;
+         console.log(self.type.name +": " + this.immediateAverage);
+         //self.led.brightness(this.immediateAverage >> 2);
+         this.immediateHistory = [];
+         this.immediateTotal = 0;
+         this.archiveAverage(new Date(Date.now()), this.immediateAverage);
+         this.notifyObservers(this, event);
+      }
+   },
+
+   processWeight: function (event) {
+      var self = this;
+      this.immediateHistory.push(event.value);
+      this.immediateTotal = event.value;
+
+      if (this.immediateHistory.length == 200) {
+         this.immediateAverage = this.immediateTotal/200;
+         console.log(self.type.name +": " + this.immediateAverage);
+         //self.led.brightness(this.immediateAverage >> 2);
+         this.immediateHistory = [];
+         this.immediateTotal = 0;
+         this.archiveAverage(new Date(Date.now()), this.immediateAverage);
+         this.notifyObservers(this, event);
+      }
+   },
+
+   processVelocity: function (event) {
+      event.value = event.cm;
+      var self = this;
+      this.immediateHistory.push(event.value);
+      this.immediateTotal += event.value;
+
+      if (this.immediateHistory.length == 200) {
+         this.immediateAverage = this.immediateTotal/200;
+         console.log(self.type.name +": " + this.immediateAverage);
+        //self.led.brightness(this.immediateAverage >> 2);
+         this.immediateHistory = [];
+         this.immediateTotal = 0;
+         this.archiveAverage(new Date(Date.now()), this.immediateAverage);
+         this.notifyObservers(this, event);
+      }
    },
 
 

@@ -153,6 +153,53 @@ var SecurityLog = new Class(DomainObject, {
    },
 });
 
+var EventAggregator = new Class({
+  
+   initialize: function(name) {
+      this.name = name;
+   }
 
+});
+
+var LocationEventDetector = new Class({
+  //Subscribes to realtime streams of sensor information
+   initialize: function(location) {
+      location.eventDetector = this;
+      //this.sensors = new Hash();
+      this.sensors = [];
+      this.threatStatus = new Hash();
+   },
+
+   registerSensor: function(sensor){
+      this.sensors.push(sensor);
+   },
+
+   analyzeEvent: function(sensor, event) {
+      //compare to statistical average
+      //assign threat level
+      //
+      this.name = name;
+   },
+
+   recalibrateThreatLevel: function (argument) {
+      // body...
+   },
+
+   raiseAlarm: function (argument) {
+      // body...
+   },
+
+   engageCountermeasure: function (argument) {
+      // body...
+   },
+
+   disengageCountermeasure: function (argument) {
+      // body...
+   }
+
+});
+
+module.exports.EventAggregator = EventAggregator;
+module.exports.LocationEventDetector = LocationEventDetector;
 module.exports.ComplexEvent = ComplexEvent;
 module.exports.SecurityLog = SecurityLog;

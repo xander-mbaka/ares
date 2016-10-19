@@ -113,10 +113,12 @@ var AbstractMapper = new Class({
                  
          this.loadFields(args, result, function (object) {
             //Console.print('This ? '+JSON.stringify(object))
-            object.loadObjects();
-            UnitOfWork.registerClean(object);
-            self.loadedMap.store(id, object);
-            cb(object);
+            object.loadObjects(function (deep_cb) {
+               UnitOfWork.registerClean(object);
+               self.loadedMap.store(id, object);
+               cb(object);
+            });
+           
          });
       };     
    },   
@@ -488,7 +490,8 @@ var DomainObject = new Class({
       this.markDirty();
    },
 
-   loadObjects:function () {
+   loadObjects:function (cb) {
+      cb();
    },
 
    markNew:function () {

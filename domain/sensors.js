@@ -190,7 +190,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }*/
    },
 
@@ -223,7 +223,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -239,7 +239,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -255,7 +255,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -272,7 +272,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -288,7 +288,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -305,7 +305,7 @@ var Sensor = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -406,7 +406,7 @@ var EventType = new Class(DomainObject, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -452,7 +452,7 @@ var VibrationSensor = new Class(SensorType, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -509,7 +509,7 @@ var MotionSensor = new Class(SensorType, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -566,7 +566,7 @@ var ProximitySensor = new Class(SensorType, {
          this.immediateHistory = [];
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 
@@ -624,7 +624,7 @@ var WeightSensor = new Class(SensorType, {
          this.immediateTotal = 0;
          this.archiveAverage(new Date(Date.now()), this.immediateAverage);
          //this.assignProbability
-         this.notifyObservers(this, event);
+         this.notifyObservers(event);
       }
    },
 

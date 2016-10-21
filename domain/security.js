@@ -161,7 +161,7 @@ var EventAggregator = new Class({
 
 });
 
-var LocationEventDetector = new Class({
+var LocationEventDetector = new Class(DomainObject, {
   //Subscribes to realtime streams of sensor information
    initialize: function(location) {
       location.eventDetector = this;
@@ -172,6 +172,7 @@ var LocationEventDetector = new Class({
 
    registerSensor: function(sensor){
       this.sensors.push(sensor);
+      sensor.addObserver(this.processSecurityEvent, this);
    },
 
    analyzeEvent: function(sensor, event) {
@@ -179,6 +180,10 @@ var LocationEventDetector = new Class({
       //assign threat level
       //
       this.name = name;
+   },
+
+   processSecurityEvent: function (argument) {
+      // body...
    },
 
    recalibrateThreatLevel: function (argument) {

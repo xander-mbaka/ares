@@ -17,11 +17,11 @@ var UnitOfWork = new Class({
 
       newCurrent:function () {
          this.current = new this();
+         return this.current;
       },
 
       getCurrent:function () {
          return this.current;
-         
       }
    },
 
@@ -105,6 +105,7 @@ var UnitOfWork = new Class({
    },
 
    insertNew: function(cb){
+      //instrumentation
       var total = this.newObjects.count();
       var count = 0;
       if (total < 1) {
@@ -125,6 +126,7 @@ var UnitOfWork = new Class({
    },
 
    insertNewId: function(cb){
+      //instrumentation
       var total = this.newIdObjects.count();
       var count = 0;
       if (total < 1) {
@@ -145,6 +147,7 @@ var UnitOfWork = new Class({
    },
 
    updateDirty: function(cb){
+      //instrumentation
       var total = this.dirtyObjects.count();
       var count = 0;
       if (total < 1) {
@@ -153,6 +156,7 @@ var UnitOfWork = new Class({
          this.dirtyObjects.forEach(function(obj) {
             MapperRegistry.getMapper(obj, function (mapper) {
                mapper.update(obj, function (result) {
+                  //if tx fails, reverse all
                    ++count;
                   if (count == total) {
                      cb(count)
@@ -165,6 +169,7 @@ var UnitOfWork = new Class({
    },
 
    deleteRemoved: function(cb){
+      //instrumentation
       var total = this.removedObjects.count();
       var count = 0;
       var success = 0;

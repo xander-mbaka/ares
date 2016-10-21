@@ -92,7 +92,7 @@ UoW.newCurrent();
 
 var UnitOfWork = UoW.getCurrent();
 
-//require('./host/routes/presentation').actions(app);
+require('./host/routes/presentation').actions(app);
 require('./host/routes/user').actions(app);
 
 //var records = require('./host/app/recordsApp')(UoW);
@@ -112,7 +112,7 @@ io.sockets.on('connection', function(socket) {
 var port = 3050;
 console.log(colors.magenta('\nStarting server on port ' + port));
 server.listen(3050);
-
+/*
 var five = require("johnny-five");
 var board = new five.Board({ port: "COM24" });
 
@@ -123,4 +123,4 @@ board.on("ready", function() {
       sensor.loadSensor(five);
     })
   })
-});
+});*/

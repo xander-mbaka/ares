@@ -27,17 +27,21 @@ module.exports = function (UoW) {
 
     var socketcalls = function (socket) {
         socket.on('record:add', function (data) {
-            UoW.newCurrent();
-            var UnitOfWork = UoW.getCurrent();
+            //UoW.newCurrent();
+            var UnitOfWork = UoW.newCurrent();
+            //session.uow.new();
+            //session.uow = UoW.newCurrent();
 
-            Patient.createWithId(data, function (object) {
+            Patient.createWithId(data, function (object) {// (context/session, data, fallback)
+                //session.uow.commit();
                 UnitOfWork.commit(function (ack) {
                     if (ack) {
                         socket.emit('record:created', object);
                     } else {
+                        //ack.rollback
                         socket.emit('record:error', {error: 'Record could not be saved!'});
                     }
-               });                
+               });              
             })
         });
 
